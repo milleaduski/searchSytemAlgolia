@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Duski Tutor</title>
+	<script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+</head>
+<body>
+	<h1>Algoia search</h1>
+	<input type="text" name="" placeholder="search.." id="searchBox">
+	<ul id="resultBox">
+		
+	</ul>
+	<script type="text/javascript">
+		var client = algoliasearch('PACBZRD3Z1','ab4b2b226200fec5d58aa85e25b1032d')
+		var index  = client.initIndex('tutor_utopian')
+		//initialize input and Ul
+		resultBox = document.getElementById('resultBox')
+		searchBox = document.getElementById('searchBox')
+		//add event listener
+		searchBox.addEventListener('keydown',search)
+		searchBox.addEventListener('change',search)
+		//create function search()
+		function search(){
+			query = searchBox.value
+
+			index.search(query, function(err, data){
+				if (err)
+					console.log(err)
+				else
+					resultBox.innerHTML = ''
+				for (var i=0; i < data.hits.length; i++) {
+					var li = document.createElement('li')
+					li.innerText = data.hits[i].description
+					resultBox.appendChild(li)
+				}
+			})	
+		}
+	</script>
+</body>
+</html>
+
+
+
