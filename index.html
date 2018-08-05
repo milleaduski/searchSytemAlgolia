@@ -3,38 +3,74 @@
 <head>
 	<title>Duski Tutor</title>
 	<script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<style type="text/css">
+.algolia-autocomplete {
+  width: 100%;
+}
+.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+  width: 100%;
+}
+.algolia-autocomplete .aa-hint {
+  color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #999;
+  border-top: none;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  cursor: pointer;
+  padding: 5px 4px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: #B2D7FF;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+  font-weight: bold;
+  font-style: normal;
+}
+</style>
 </head>
+
 <body>
-	<h1>Algoia search</h1>
-	<input type="text" name="" placeholder="search.." id="searchBox">
-	<ul id="resultBox">
-		
-	</ul>
+	
+	<div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+	        <div class="page-header">
+	  			<h1>Duski Tutor Algolia <small>Algolia autocomplete</small></h1>
+			</div>
+         
+          <form action="#" class="form">
+            <input class="form-control" id="search-input" name="contacts" type="text" placeholder='Search by name' />
+          </form>
+        </div>
+      </div>
+    </div>
+	<script
+  		src="https://code.jquery.com/jquery-3.3.1.min.js"
+  		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  		crossorigin="anonymous">
+  	</script>
+	<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
 	<script type="text/javascript">
 		var client = algoliasearch('PACBZRD3Z1','ab4b2b226200fec5d58aa85e25b1032d')
 		var index  = client.initIndex('tutor_utopian')
-		//initialize input and Ul
-		resultBox = document.getElementById('resultBox')
-		searchBox = document.getElementById('searchBox')
-		//add event listener
-		searchBox.addEventListener('keydown',search)
-		searchBox.addEventListener('change',search)
-		//create function search()
-		function search(){
-			query = searchBox.value
-
-			index.search(query, function(err, data){
-				if (err)
-					console.log(err)
-				else
-					resultBox.innerHTML = ''
-				for (var i=0; i < data.hits.length; i++) {
-					var li = document.createElement('li')
-					li.innerText = data.hits[i].description
-					resultBox.appendChild(li)
-				}
-			})	
-		}
+		  $('#search-input').autocomplete({ hint: false }, [
+		    {
+		      source: $.fn.autocomplete.sources.hits(index, { hitsPerPage: 5 }),
+		      displayKey: 'name',
+		      templates: {
+		        suggestion: function(suggestion) {
+		          return suggestion._highlightResult.name.value;
+		        }
+		      }
+		    }
+		  ]).on('autocomplete:selected', function(event, suggestion, dataset) {
+		    console.log(suggestion, dataset);
+		  });
 	</script>
 </body>
 </html>
